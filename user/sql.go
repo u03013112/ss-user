@@ -27,6 +27,9 @@ func InitDB() {
 
 // 返回用户ID或者0
 func auth(username string, passwd string) (uint, error) {
+	if username == "" && passwd == "" {
+		return 0, errors.New("null username")
+	}
 	var user UserAuth
 	db := sql.GetInstance().Model(&UserAuth{})
 	db = db.Where(&UserAuth{Username: username, Passwd: passwd}).First(&user)
