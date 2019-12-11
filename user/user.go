@@ -11,6 +11,7 @@ import (
 // Srv ：服务
 type Srv struct{}
 
+// Login :
 func (s *Srv) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
 	id, err := auth(in.Username, in.Passwd)
 	if err != nil {
@@ -24,6 +25,7 @@ func (s *Srv) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, e
 	return &pb.LoginReply{Token: token.String()}, nil
 }
 
+// GetRoles :
 func (s *Srv) GetRoles(ctx context.Context, in *pb.GetRolesRequest) (*pb.GetRolesReply, error) {
 	u, err := getUserInfoByToken(in.Token)
 	if err != nil {
@@ -31,4 +33,18 @@ func (s *Srv) GetRoles(ctx context.Context, in *pb.GetRolesRequest) (*pb.GetRole
 	}
 
 	return &pb.GetRolesReply{Role: u.Role}, nil
+}
+
+// GetUserInfo :
+func (s *Srv) GetUserInfo(ctx context.Context, in *pb.GetUserInfoRequest) (*pb.GetUserInfoReply, error) {
+	// 各种用户都查一下，目前就只有android，就只能查android
+	str, err := grpcGetAndroidUserStatus(in.Token)
+	if err == nil {
+		ret := &pb.GetUserInfoReply{
+			Type:   "android",
+			Status: str,
+		}
+		return ret, nil
+	}
+	return nil, errors.New("not found user")
 }
