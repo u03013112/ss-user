@@ -1,0 +1,129 @@
+syntax = "proto3";
+package android;
+option go_package = "github.com/u03013112/ss-pb/android";
+
+import "google/api/annotations.proto";
+
+service Android {
+    rpc Login (LoginRequest) returns (LoginReply){
+        option (google.api.http) = {
+            post: "/v1/android/login"
+            body: "*"
+        };
+    }
+    rpc GetConfig (GetConfigRequest) returns (GetConfigReply){
+        option (google.api.http) = {
+            post: "/v1/android/config"
+            body: "*"
+        };
+    }
+    rpc Keepalive (KeepaliveRequest) returns (KeepaliveReply){
+        option (google.api.http) = {
+            post: "/v1/android/keepalive"
+            body: "*"
+        };
+    }
+    rpc GetProdectionList (GetProdectionListRequest) returns (GetProdectionListReply){
+        option (google.api.http) = {
+            post: "/v1/android/getProdectionList"
+            body: "*"
+        };
+    }
+    rpc BuyTest (BuyTestRequest) returns (BuyTestReply){
+        option (google.api.http) = {
+            post: "/v1/android/buyTest"
+            body: "*"
+        };
+    }
+    rpc GetGoogleAd (GetGoogleAdRequest) returns (GetGoogleAdReply){
+        option (google.api.http) = {
+            post: "/v1/android/getGoogleAd"
+            body: "*"
+        };
+    }
+
+    rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoReply) {}
+}
+
+message LoginRequest {
+    string uuid = 1;
+}
+
+message LoginReply {
+    string token = 1;
+    int64 expiresDate = 2;
+    int64 total = 3;
+    int64 used = 4;
+
+    string error = 9;
+}
+
+message GetConfigRequest {
+    string token = 1;
+}
+
+message GetConfigReply {
+    string IP = 1;
+    string port = 2;
+    string method = 3;
+    string passwd = 4;
+
+    string error = 9;
+}
+
+message KeepaliveRequest {
+    string token = 1;
+    int64 rx = 2;
+}
+
+message KeepaliveReply {
+    bool needStop = 1;
+    int64 expiresDate = 2;
+    int64 total = 3;
+    int64 used = 4;
+
+    string error = 9;
+}
+
+message GetProdectionListRequest {
+    string token = 1;
+}
+message Prodection {
+    int64 ID = 1;
+    int64 time = 2;
+    int64 total = 3;
+    int64 price = 4;
+    string description = 5;
+}
+message GetProdectionListReply {
+    repeated Prodection prodectionList = 1;
+
+    string error = 9;
+}
+
+message BuyTestRequest {
+    string token = 1;
+    int64 prodectionID = 2;
+}
+message BuyTestReply {
+    int64 expiresDate = 1;
+    int64 total = 2;
+    int64 used = 3;
+
+    string error = 9;
+}
+
+message GetGoogleAdRequest {
+    string token = 1;
+}
+message GetGoogleAdReply {
+    string id = 1;
+}
+
+message GetUserInfoRequest {
+    string token = 1;
+}
+
+message GetUserInfoReply {
+    string status = 1; //normal,expired,outOfTraffic and so on
+}
