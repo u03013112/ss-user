@@ -29,7 +29,7 @@ func grpcGetAndroidUserStatus(token string) (string, error) {
 	})
 	if err != nil {
 		log.Printf("could not GetSSConfig: %v", err)
-		return r.Status, err
+		return "unknow", err
 	}
 	return r.Status, nil
 }
