@@ -1,0 +1,40 @@
+---
+kind: pipeline
+name: default
+
+steps:
+- name: build
+  image: golang:1.12
+  commands:  # build
+  - mkdir build 
+  - GOFLAGS=-mod=vendor CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/ss-user -a -installsuffix cgo -ldflags '-w'
+  environment:
+    GO111MODULE: on
+  when:
+    branch:
+      - master
+    event:
+      - push
+  volumes:
+  - name: cache
+    path: /go
+
+- name: docker-latest
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: DOCKER_USER
+    password:
+      from_secret: DOCKER_PASSWORD
+    repo: u03013112/ss-user
+    tags:
+      - latest
+    dockerfile: Dockerfile
+  when:
+    branch:
+      - master
+    event:
+      - push
+
+
+...
